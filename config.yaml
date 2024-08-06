@@ -1,0 +1,68 @@
+output_directory:
+    'VF240710_all_windows'
+
+summary_file:
+    E2429_TRIP: '/DATA/usr/a.kocher/projects/TRIP_TF_reporters/ak20240502_E2429_first_TRIP/ak20240513_integration_coord.txt' 
+
+# Note that this pipeline assumes that your input summary file is a tab-separated 
+# file with header and with the following columns:
+# 1. name (barcode of the integration)
+# 2. chromosome (chromosome of the integration)
+# 3. start (location of the integration)
+
+bins:
+    E2429_TRIP: [2000, 5000, 10000, 20000, 50000, 100000]
+
+bin_for_overlap_feature: 1000000
+bin_for_nearest_feature: 1
+
+
+# chip_dir:
+#     '/DATA/scratch/usr/c.leemans/projects/chip_snake/'
+# chip_config:
+#     '/DATA/scratch/usr/c.leemans/projects/chip_snake/VF_coverage_config_blank_RPE1.yaml'
+# chip_snake:
+#     '/DATA/scratch/usr/c.leemans/projects/chip_snake/VF_chip_coverage.snakemake'
+
+    
+#### To run this pipeline this is the script that needs to be run in the chip environment of conda
+#snakemake -s /DATA/scratch/usr/c.leemans/projects/DSB_repair_TRIP/pipeline/location_info/TRIP_location_info.snakemake 
+#--configfile /DATA/usr/a.kocher/projects/TRIP_TF_reporters/ak20240513_mESC_chromatin_data/ak20240513_coverage_config.yaml 
+#--cores 10
+
+  
+  
+data_sources:
+    pADamID:
+        H3K9me3:
+            experiment:
+                - /DATA/usr/l.dauban/projects/pA-DamID/E2113_Del_Inv_Heterochromatin/results_mm10_nextseq_strainspecific/counts/bin-gatc/T48h20_rep1_Dam_k9me3-gatc.counts.txt.gz
+                - /DATA/usr/l.dauban/projects/pA-DamID/E2113_Del_Inv_Heterochromatin/results_mm10_nextseq_strainspecific/counts/bin-gatc/T48h20_rep2_Dam_k9me3-gatc.counts.txt.gz
+            control:
+                - /DATA/usr/l.dauban/projects/pA-DamID/E2113_Del_Inv_Heterochromatin/results_mm10_nextseq_strainspecific/counts/bin-gatc/T48h20_rep1_H3K9me3-gatc.counts.txt.gz
+                - /DATA/usr/l.dauban/projects/pA-DamID/E2113_Del_Inv_Heterochromatin/results_mm10_nextseq_strainspecific/counts/bin-gatc/T48h20_rep2_H3K9me3-gatc.counts.txt.gz
+
+    coverage:
+        H3K9me3:
+            /DATA/usr/a.kocher/projects/TRIP_TF_reporters/ak20240513_mESC_chromatin_data/bigWig/E14TG2a.4_H3K9me3.bigWig
+        H3K27me3:
+            /DATA/usr/a.kocher/projects/TRIP_TF_reporters/ak20240513_mESC_chromatin_data/bigWig/E14TG2a.4_H3K27me3.bigWig
+        H3K4me3:
+            /DATA/usr/a.kocher/projects/TRIP_TF_reporters/ak20240513_mESC_chromatin_data/bigWig/E14TG2a.4_H3K4me3.bigWig
+        H3K4me1:
+            /DATA/usr/a.kocher/projects/TRIP_TF_reporters/ak20240513_mESC_chromatin_data/bigWig/E14TG2a.4_H3K4me1.bigWig
+        H3K36me3:
+            /DATA/usr/a.kocher/projects/TRIP_TF_reporters/ak20240513_mESC_chromatin_data/bigWig/E14TG2a.4_H3K36me3.bigWig
+        DNase:
+            /DATA/usr/a.kocher/projects/TRIP_TF_reporters/ak20240513_mESC_chromatin_data/bigWig/ES-E14_DNase.bigWig
+
+    feature:
+    # bed/gff/vcf
+        gene:
+            gencode.vM10.annotation.gff3
+        gene.only:
+            VF240806_mm10_genes.gff
+
+
+chrom_sizes:
+    mm10: /DATA/data/mouse/mm10/mm10.chrom.sizes
