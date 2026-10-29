@@ -134,8 +134,11 @@ def get_paDamID_normalized_tracks(config, wildcards):
     Used in the pa_DamID_normalize_track rule.
     """
     bs = wildcards.binsize
+    bs=int(bs) / 1000
+    # if ends with .0, remove it
+    bs=str(bs).rstrip(".0")
     return "{outdir}/pADamID_normalized_tracks/{dam_experiment}-{bs}kb.bw".format(
-        bs=int(int(bs) / 1000), **wildcards
+        bs=bs, **wildcards
     )
 
 
@@ -202,11 +205,12 @@ rule expand_integration_sites_to_windows:
         genome="mm10",
         size="{binsize}",
         scripts_dir=scripts_dir,
+        chrom_sizes=config["chrom_sizes"]["mm10"],
     shell:
         """
         Rscript {scripts_dir}/expand_integrations_to_windows.R \
         --input_bed {input} --output {output.unsorted_bed} --genome {params.genome} \
-        --bin_size {params.size}
+        --bin_size {params.size} --chrom_sizes {params.chrom_sizes}
 
         bedtools sort -i {output.unsorted_bed} > {output.bed}
         """
@@ -381,11 +385,12 @@ rule expand_integration_sites_to_overlap:
         genome="mm10",
         size=config["bin_for_overlap_feature"],
         scripts_dir=scripts_dir,
+        chrom_sizes=config["chrom_sizes"]["mm10"],
     shell:
         """
         Rscript {scripts_dir}/expand_integrations_to_windows.R \
         --input_bed {input} --output {output.unsorted_bed} --genome {params.genome} \
-        --bin_size {params.size}
+        --bin_size {params.size} --chrom_sizes {params.chrom_sizes}
 
         bedtools sort -i {output.unsorted_bed} > {output.bed}
         """
@@ -413,11 +418,12 @@ rule expand_integration_sites_to_nearest:
         genome="mm10",
         size=config["bin_for_nearest_feature"],
         scripts_dir=scripts_dir,
+        chrom_sizes=config["chrom_sizes"]["mm10"]
     shell:
         """
         Rscript {scripts_dir}/expand_integrations_to_windows.R \
         --input_bed {input} --output {output.unsorted_bed} --genome {params.genome} \
-        --bin_size {params.size}
+        --bin_size {params.size} --chrom_sizes {params.chrom_sizes}
 
         bedtools sort -i {output.unsorted_bed} > {output.bed}
         """

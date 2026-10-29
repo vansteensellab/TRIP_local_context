@@ -32,13 +32,28 @@ parser$add_argument(
     "--genome",
     help = "Name of the genome (e.g. mm10)"
 )
+parser$add_argument(
+    "--chrom_sizes",
+    help = "Chromosome sizes file"
+)
 args <- parser$parse_args()
 
 # Read input bed; columns are name, chrom, start
 bed <- fread(args$input_bed, header=T)
 bed$end = bed$start
-genome = Seqinfo(genome = args$genome)
+# genome = Seqinfo(genome = args$genome)
 
+message("Chromosome sizes file: ", args$chrom_sizes)
+
+# Read chromosome sizes file and add to genome object
+chrom_sizes = fread(args$chrom_sizes, header = F)
+chr_names = chrom_sizes$V1
+chr_lengths = chrom_sizes$V2
+genome = Seqinfo(
+    seqnames = chr_names,
+    seqlengths = chr_lengths, 
+    genome = args$genome
+)
 
 # Create the GRanges object
 expanded_gr =
